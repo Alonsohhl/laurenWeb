@@ -8,10 +8,17 @@ type NavItem = {
   hash: string;
 };
 
+// Debounce type definition
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DebouncedFunction<T extends (...args: any[]) => void> = (
+  ...args: Parameters<T>
+) => void;
+
 const navItems: NavItem[] = [
   { id: "home", label: "Home", hash: "#home" },
   { id: "portfolio", label: "Portfolio", hash: "#portfolio" },
   { id: "about", label: "about", hash: "#about" },
+  { id: "contact", label: "contact", hash: "#contact" },
 ];
 
 // Framer Motion variants
@@ -42,10 +49,13 @@ const activeIndicatorVariants = {
   exit: { scale: 0.9, opacity: 0 },
 };
 
-// Debounce helper function
-const debounce = (func: Function, wait: number) => {
+// Typed debounce function
+const debounce = <T extends (...args: Parameters<T>) => ReturnType<T>>(
+  func: T,
+  wait: number,
+): DebouncedFunction<T> => {
   let timeout: NodeJS.Timeout;
-  return (...args: any[]) => {
+  return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
   };
@@ -56,11 +66,13 @@ export default function Navigation() {
 
   const handleScroll = useCallback(
     debounce(() => {
-      const sections = document.querySelectorAll("section");
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>("section"),
+      );
       const scrollPosition = window.scrollY + 100;
       let newActiveSection = activeSection;
 
-      for (const section of sections) {
+      sections.forEach((section) => {
         const topOffset = section.offsetTop;
         const height = section.offsetHeight;
         if (
@@ -69,9 +81,8 @@ export default function Navigation() {
           newActiveSection !== section.id
         ) {
           newActiveSection = section.id;
-          break;
         }
-      }
+      });
 
       if (newActiveSection !== activeSection) {
         setActiveSection(newActiveSection);

@@ -9,6 +9,18 @@ import Image from "next/image";
 import { X, ZoomIn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+interface Dimensions {
+  width: number;
+  height: number;
+}
+
+interface CardType {
+  id: number;
+  content: React.ReactNode;
+  className: string;
+  thumbnail: string;
+}
+
 const SkeletonOne = () => {
   return (
     <div>
@@ -298,23 +310,23 @@ const cards = [
     thumbnail: "/images/portfolio/whitepopp.webp",
   },
 ];
-
 const LayoutGrid = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [dimensions, setDimensions] = useState([]);
+  const [selectedImage, setSelectedImage] = useState<CardType | null>(null);
+  const [dimensions, setDimensions] = useState<Dimensions[]>([]);
 
   useEffect(() => {
-    // Generate random dimensions for each card
-    const newDimensions = cards.map(() => {
-      const ratios = [
-        { width: 1, height: 1 }, // Square
-        { width: 3, height: 4 }, // Portrait
-        { width: 4, height: 3 }, // Landscape
-        { width: 16, height: 9 }, // Wide
-        { width: 2, height: 3 }, // Tall portrait
-      ];
-      return ratios[Math.floor(Math.random() * ratios.length)];
-    });
+    const ratios: Dimensions[] = [
+      { width: 1, height: 1 }, // Square
+      { width: 3, height: 4 }, // Portrait
+      { width: 4, height: 3 }, // Landscape
+      { width: 16, height: 9 }, // Wide
+      { width: 2, height: 3 }, // Tall portrait
+    ];
+
+    const newDimensions = cards.map(
+      () => ratios[Math.floor(Math.random() * ratios.length)],
+    );
+
     setDimensions(newDimensions);
   }, []);
 
@@ -326,7 +338,7 @@ const LayoutGrid = () => {
   };
 
   return (
-    <div className=" relative">
+    <div className="relative block">
       <Masonry
         breakpointCols={breakpointColumns}
         className="flex -ml-4 w-auto"
@@ -386,7 +398,7 @@ const LayoutGrid = () => {
                   <X className="w-5 h-5" />
                 </DialogClose>
 
-                <div className="relative overflow-hidden  shadow-xl">
+                <div className="relative overflow-hidden shadow-xl">
                   <Image
                     src={selectedImage.thumbnail}
                     alt={`Artwork ${selectedImage.id}`}
@@ -402,9 +414,9 @@ const LayoutGrid = () => {
                   transition={{ delay: 0.2 }}
                   className="bg-white/90 backdrop-blur-sm p-4 shadow-lg"
                 >
-                  <p className="text-lg leading-relaxed text-gray-800">
+                  <div className="text-lg leading-relaxed text-gray-800">
                     {selectedImage.content}
-                  </p>
+                  </div>
                 </motion.div>
               </motion.div>
             </DialogContent>
@@ -414,5 +426,4 @@ const LayoutGrid = () => {
     </div>
   );
 };
-
 export default LayoutGrid;

@@ -14,11 +14,8 @@ export const Section = ({
   paragraph,
 }: sectionProps) => {
   return (
-    <div
-      id={title}
-      className={` border-t border-dashed border-destructive  pt-8`}
-    >
-      <h2 className="font-sans text-3xl text-destructive uppercase text-right px-8">
+    <div id={title} className={` border-t border-dashed border-destructive  `}>
+      <h2 className="font-sans text-lg text-destructive uppercase text-right px-8">
         {title}
         <span className="float-left">\\{number}</span>
       </h2>
@@ -29,7 +26,7 @@ export const Section = ({
         </p>
       )}
 
-      <div className="py-8 px-8">{children}</div>
+      <div className="my-10 px-8">{children}</div>
     </div>
   );
 };
