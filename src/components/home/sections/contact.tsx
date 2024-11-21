@@ -27,9 +27,8 @@ export function Contact() {
             </div>
           </div>
           <p>
-            Hey there! Curious about art classes or just want to chat about art?
-            Send me a message and let&apos;s connect! Please provide your name,
-            email address, subject and your message.
+            Hello! Send me a message and let’s connect. Please provide your
+            name, email address, subject and your message.
           </p>
           <p> Thank you</p>
           <div>
